@@ -1,3 +1,3 @@
 class Car < ApplicationRecord
-  #has_one_attached :creport
+  has_one_attached :creport
 end
