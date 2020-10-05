@@ -21,21 +21,25 @@ class CarsController < ApplicationController
   def edit
   end
 
-  # POST /cars
-  # POST /cars.json
-  def create
-    @car = Car.new(car_params)
+# POST /cars
+# POST /cars.json
+def create
+  @car = Car.new(car_params)
+  respond_to do |format|
+    if @car.save
+      @car.creport.open do |file|
+        r = PDF::Reader.new(file)
+        @car.update_attribute(:file_text, r.pages[0].text)
+      end if @car.creport.attached?
 
-    respond_to do |format|
-      if @car.save
-        format.html { redirect_to @car, notice: 'Car was successfully created.' }
-        format.json { render :show, status: :created, location: @car }
-      else
-        format.html { render :new }
-        format.json { render json: @car.errors, status: :unprocessable_entity }
-      end
+      format.html { redirect_to @car, notice: 'Car was successfully created.' }
+      format.json { render :show, status: :created, location: @car }
+    else
+      format.html { render :new }
+      format.json { render json: @car.errors, status: :unprocessable_entity }
     end
   end
+end
 
   # PATCH/PUT /cars/1
   # PATCH/PUT /cars/1.json

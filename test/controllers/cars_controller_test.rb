@@ -32,6 +32,12 @@ class CarsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "should copy PDF text to file_text" do
+    post cars_url, params: { car: { model: @car.model, creport: @file } }
+    assert_equal('Dummy PDF file', Car.last.file_text)
+  end
+
+
   test "should show car" do
     get car_url(@car)
     assert_response :success
